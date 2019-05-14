@@ -8,6 +8,7 @@ const gulp = require('gulp'),
 	clean = require('gulp-clean'),
 	fileInclude = require('gulp-file-include'),
 	watcher = gulp.watch(['src/css/*']),
+	watcherjs = gulp.watch(['src/js/*']),
 	Dist = 'build/public'
 
 // 语法检查
@@ -30,17 +31,6 @@ gulp.task('minify-js', cb => {
 		.pipe(gulp.dest(Dist + '/js')) //输出
 	cb()
 })
-
-// 默认执行的命令
-// gulp.task('default', gulp.series('jshint', 'minifyjs', async function () {
-//     console.log('打包完成..')
-// }))
-
-// 默认执行的命令
-// gulp.task('default', gulp.series('jshint', 'minifyjs',  function (done) {
-//     console.log('打包完成..')
-//     done()
-// }))
 
 // 打包html
 gulp.task('minify-html', cb => {
@@ -85,14 +75,12 @@ gulp.task('watch', cb => {
 	watcher.on('minify-css', (path, stats) => {
 		console.log(`File ${path} was minify`)
 	}) //监听css变化
-	;(watcherjs = gulp.watch(['src/js/*'])),
-		watcherjs.on('minify-js', (path, stats) => {
-			console.log(`File ${path} was minify`)
-		}) //监听js变化
-	// gulp.watch('src/js/*', ['minify-js'])
-	// gulp.watch('src/css/*', ['minify-css']) //监听css文件变化
-	// gulp.watch('src/image/*', ['minifg-img']) //监听image变化
+
+	watcherjs.on('minify-js', (path, stats) => {
+		console.log(`File ${path} was minify`)
+	}) //监听js变化
 	watcher.close()
+	watcherjs.close()
 	cb()
 })
 
@@ -134,3 +122,9 @@ gulp.task(
 		console.log('成功')
 	}
 )
+
+/* 错误警告：Refused to execute inline script because it violates the following Content Security
+ Policy directive: "default-src 'self'". Either the 'unsafe-inline' keyword, 
+ a hash ('sha256-gpnLwpFw97DB28/JjA3G79AHgq5DtCgFiFwjahrA1d4='), 
+ or a nonce ('nonce-...') is required to enable inline execution. 
+ Note also that 'script-src' was not explicitly set, so 'default-src' is used as a fallback. */
